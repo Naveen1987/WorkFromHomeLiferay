@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.daffo.wiki_node_tableservice.model.wiki_comment_table" />
+	<import class="com.daffo.wiki_node_tableservice.model.wiki_node_table" />
+	<import class="com.daffo.wiki_node_tableservice.model.wiki_page_table" />
+	<import class="com.daffo.wiki_node_tableservice.model.wiki_pagedata_table" />
+	<class name="com.daffo.wiki_node_tableservice.model.impl.wiki_comment_tableImpl" table="wiki_comment_table">
+		<id name="comment_ID" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="Comment_data" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="Comment_User" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="Comment_Date" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="PageID" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.daffo.wiki_node_tableservice.model.impl.wiki_node_tableImpl" table="wiki_node_table">
+		<id name="NodeID" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="NodeName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="NodeDescription" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="NodeCreationDate" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="NodeCreator" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="NodeModificationDate" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.daffo.wiki_node_tableservice.model.impl.wiki_page_tableImpl" table="wiki_page_table">
+		<id name="PageID" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="PageName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="PageDescription" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="PageRating" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="PageVersion" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="NodeID" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="Page_Creation_Date" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="Page_creator" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="com.daffo.wiki_node_tableservice.model.impl.wiki_pagedata_tableImpl" table="wiki_pagedata_table">
+		<id name="Page_ModID" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="PageData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="PageEdit_User" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="Page_editDate" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="Page_Version" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="PageID" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+</hibernate-mapping>
