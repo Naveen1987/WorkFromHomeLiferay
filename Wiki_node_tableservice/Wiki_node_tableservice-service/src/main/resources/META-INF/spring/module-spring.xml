@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="com.daffo.wiki_node_tableservice.service.impl.wiki_comment_tableLocalServiceImpl" id="com.daffo.wiki_node_tableservice.service.wiki_comment_tableLocalService" />
+	<bean class="com.daffo.wiki_node_tableservice.service.persistence.impl.wiki_comment_tablePersistenceImpl" id="com.daffo.wiki_node_tableservice.service.persistence.wiki_comment_tablePersistence" parent="basePersistence" />
+	<bean class="com.daffo.wiki_node_tableservice.service.impl.wiki_node_tableLocalServiceImpl" id="com.daffo.wiki_node_tableservice.service.wiki_node_tableLocalService" />
+	<bean class="com.daffo.wiki_node_tableservice.service.persistence.impl.wiki_node_tablePersistenceImpl" id="com.daffo.wiki_node_tableservice.service.persistence.wiki_node_tablePersistence" parent="basePersistence" />
+	<bean class="com.daffo.wiki_node_tableservice.service.impl.wiki_page_tableLocalServiceImpl" id="com.daffo.wiki_node_tableservice.service.wiki_page_tableLocalService" />
+	<bean class="com.daffo.wiki_node_tableservice.service.persistence.impl.wiki_page_tablePersistenceImpl" id="com.daffo.wiki_node_tableservice.service.persistence.wiki_page_tablePersistence" parent="basePersistence" />
+	<bean class="com.daffo.wiki_node_tableservice.service.impl.wiki_pagedata_tableLocalServiceImpl" id="com.daffo.wiki_node_tableservice.service.wiki_pagedata_tableLocalService" />
+	<bean class="com.daffo.wiki_node_tableservice.service.persistence.impl.wiki_pagedata_tablePersistenceImpl" id="com.daffo.wiki_node_tableservice.service.persistence.wiki_pagedata_tablePersistence" parent="basePersistence" />
+</beans>

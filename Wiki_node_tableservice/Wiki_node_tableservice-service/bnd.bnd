@@ -1,0 +1,5 @@
+Bundle-Name: Wiki_node_tableservice-service
+Bundle-SymbolicName: com.daffo.wiki_node_tableservice.service
+Bundle-Version: 1.0.0
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.daffo.wiki_node_tableservice.model.wiki_comment_table">
+		<field name="comment_ID" type="long" />
+		<field name="Comment_data" type="String" />
+		<field name="Comment_User" type="String" />
+		<field name="Comment_Date" type="String" />
+		<field name="PageID" type="long" />
+	</model>
+	<model name="com.daffo.wiki_node_tableservice.model.wiki_node_table">
+		<field name="NodeID" type="long" />
+		<field name="NodeName" type="String" />
+		<field name="NodeDescription" type="String" />
+		<field name="NodeCreationDate" type="String" />
+		<field name="NodeCreator" type="String" />
+		<field name="NodeModificationDate" type="String" />
+	</model>
+	<model name="com.daffo.wiki_node_tableservice.model.wiki_page_table">
+		<field name="PageID" type="long" />
+		<field name="PageName" type="String" />
+		<field name="PageDescription" type="String" />
+		<field name="PageRating" type="String" />
+		<field name="PageVersion" type="String" />
+		<field name="NodeID" type="long" />
+		<field name="Page_Creation_Date" type="String" />
+		<field name="Page_creator" type="String" />
+	</model>
+	<model name="com.daffo.wiki_node_tableservice.model.wiki_pagedata_table">
+		<field name="Page_ModID" type="long" />
+		<field name="PageData" type="String" />
+		<field name="PageEdit_User" type="String" />
+		<field name="Page_editDate" type="String" />
+		<field name="Page_Version" type="String" />
+		<field name="PageID" type="long" />
+	</model>
+</model-hints>

@@ -1,0 +1,9 @@
+Bundle-Name: Wiki_node_tableservice-api
+Bundle-SymbolicName: com.daffo.wiki_node_tableservice.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.daffo.wiki_node_tableservice.exception,\
+	com.daffo.wiki_node_tableservice.model,\
+	com.daffo.wiki_node_tableservice.service,\
+	com.daffo.wiki_node_tableservice.service.persistence
+-includeresource: META-INF/service.xml=../Wiki_node_tableservice-service/service.xml

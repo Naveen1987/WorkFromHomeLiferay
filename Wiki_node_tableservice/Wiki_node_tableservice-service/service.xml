@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder package-path="com.daffo.wiki_node_tableservice">
+	<namespace>Wiki_node_tableservice</namespace>
+    <entity name="wiki_node_table" local-service="true" remote-service="false" table="wiki_node_table" cache-enabled="false">
+        <column name="NodeID" primary="true" type="long"></column>
+        <column name="NodeName" type="String"></column>
+        <column name="NodeDescription" type="String"></column>
+        <column name="NodeCreationDate" type="String"></column>
+        <column name="NodeCreator" type="String"></column>
+        <column name="NodeModificationDate" type="String"></column>
+    </entity>
+    <entity name="wiki_page_table" local-service="true" remote-service="false" table="wiki_page_table" cache-enabled="false">
+        <column name="PageID" type="long" primary="true"></column>
+        <column name="PageName" type="String"></column>
+        <column name="PageDescription" type="String"></column>
+        <column name="PageRating" type="String"></column>
+        <column name="PageVersion" type="String"></column>
+        <column name="NodeID" type="long"></column>
+        <column name="Page_Creation_Date" type="String"></column>
+        <column name="Page_creator" type="String"></column>
+         <finder name="NodeID" return-type="Collection">
+        <finder-column name="NodeID" />
+        </finder>
+    </entity>
+    <entity name="wiki_pagedata_table" local-service="true" remote-service="false" table="wiki_pagedata_table" cache-enabled="false">
+        <column name="Page_ModID" type="long" primary="true"></column>
+        <column name="PageData" type="String"></column>
+        <column name="PageEdit_User" type="String"></column>
+        <column name="Page_editDate" type="String"></column>
+        <column name="Page_Version" type="String"></column>
+        <column name="PageID" type="long"></column>
+         <finder name="PageID" return-type="Collection">
+        <finder-column name="PageID" />
+        </finder>
+    </entity>
+    <entity name="wiki_comment_table" local-service="true" remote-service="false" table="wiki_comment_table" cache-enabled="false">
+        <column name="comment_ID" primary="true" type="long"></column>
+        <column name="Comment_data" type="String"></column>
+        <column name="Comment_User" type="String"></column>
+        <column name="Comment_Date" type="String"></column>
+        <column name="PageID" type="long"></column>
+         <finder name="PageID" return-type="Collection">
+        <finder-column name="PageID" />
+        </finder>
+    </entity>
+	
+</service-builder>
