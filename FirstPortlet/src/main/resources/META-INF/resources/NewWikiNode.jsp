@@ -69,10 +69,14 @@ $("#btn-addNode").click(function(){
  			 success: function() {
  				var data=this.get('responseData');
  				A.Array.each(data, function(obj, idx){
+ 					alert(obj.msg);
+ 					if(obj.msg=="Sorry! You Node is exists")
+ 						{
+ 						return;
+ 						}
  					$("#txt-node").val('');
  					$("#txt-des").val('');
  					$("#txt-node-valid").hide();
- 					alert(obj.msg);
  					closeLiferayPopUP();
  				});
   		}

@@ -173,7 +173,15 @@ public class FirstPortlet extends MVCPortlet {
 			try {
 				User user = UserServiceUtil.getUserById(Long.parseLong(remoteUserId));
 				System.out.println(ParamUtil.getString(resourceRequest, "NodeName"));
-				System.out.println(ParamUtil.getString(resourceRequest, "NodeDescription"));	
+				System.out.println(ParamUtil.getString(resourceRequest, "NodeDescription"));
+				if(nodeDuplicateTesting(ParamUtil.getString(resourceRequest, "NodeName"))){
+					JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
+					JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
+					pageJSON.put("msg","Sorry! You Node is exists");
+					pageDataJson.put(pageJSON); 
+					resourceResponse.getWriter().print(pageDataJson.toString());
+					return;
+				}
 				wiki_node_table wnt=wiki_node_tableLocalServiceUtil.createwiki_node_table(CounterLocalServiceUtil.increment());
 				wnt.setNodeName(ParamUtil.getString(resourceRequest, "NodeName"));
 				wnt.setNodeDescription(ParamUtil.getString(resourceRequest, "NodeDescription"));
@@ -207,6 +215,14 @@ public class FirstPortlet extends MVCPortlet {
 				System.out.println(ParamUtil.getString(resourceRequest, "NodeID"));
 				System.out.println(ParamUtil.getString(resourceRequest, "pageName"));
 				System.out.println(ParamUtil.getString(resourceRequest, "pageDescription"));
+				if(pageduplicateTesting(ParamUtil.getString(resourceRequest, "pageName"), ParamUtil.getString(resourceRequest, "NodeID"))){
+					JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
+					JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
+					pageJSON.put("msg","Sorry! You page is exists");
+					pageDataJson.put(pageJSON); 
+					resourceResponse.getWriter().print(pageDataJson.toString());
+					return;
+				}
 				wiki_page_table wpt=wiki_page_tableLocalServiceUtil.createwiki_page_table(CounterLocalServiceUtil.increment());
 				wpt.setNodeID(new Long(ParamUtil.getString(resourceRequest, "NodeID")).longValue());
 				wpt.setPageName(ParamUtil.getString(resourceRequest, "pageName"));
@@ -240,6 +256,26 @@ public class FirstPortlet extends MVCPortlet {
 		}
 		}
 		
+		private boolean pageduplicateTesting(String page,String nodeid){
+			List<wiki_page_table>wpt=wiki_page_tableLocalServiceUtil.getwiki_page_tables(0, wiki_page_tableLocalServiceUtil.getwiki_page_tablesCount());
+			for(wiki_page_table wp:wpt){
+				if(wp.getPageName().equalsIgnoreCase(page)&&wp.getNodeID()==new Long(nodeid).longValue())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 		
+		private boolean nodeDuplicateTesting(String Node){
+			List<wiki_node_table> wnt=wiki_node_tableLocalServiceUtil.getwiki_node_tables(0, wiki_node_tableLocalServiceUtil.getwiki_node_tablesCount());
+			for(wiki_node_table wp:wnt){
+				if(wp.getNodeName().equalsIgnoreCase(Node))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 		
 }

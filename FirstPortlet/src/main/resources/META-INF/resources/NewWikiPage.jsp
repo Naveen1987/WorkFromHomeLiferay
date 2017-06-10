@@ -72,6 +72,11 @@ $("#btn-addpage").click(function(){
  			 success: function() {
  				var data=this.get('responseData');
  				A.Array.each(data, function(obj, idx){
+ 					alert(obj.msg);
+ 					if(obj.msg=="Sorry! You page is exists")
+ 						{
+ 						return;
+ 						}
  					$("#txt-page").val('');
  					$("#txt-des").val('');
  					$("#txt-page-valid").hide();
