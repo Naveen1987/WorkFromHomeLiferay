@@ -1,6 +1,4 @@
 <%@ include file="/init.jsp" %>
-<liferay-ui:success key="success" message="Record Updated successfully!"/>
-
 <portlet:actionURL var="addURL" name="newWikiNode">
 <portlet:param name="mvcPath" value="/NewWikiNode.jsp" />
 </portlet:actionURL>
@@ -75,6 +73,7 @@ $("#btn-addNode").click(function(){
  					$("#txt-des").val('');
  					$("#txt-node-valid").hide();
  					alert(obj.msg);
+ 					closeLiferayPopUP();
  				});
   		}
 		}
@@ -83,4 +82,12 @@ $("#btn-addNode").click(function(){
 	//Ajax End
  
 });
+
+//Close to window
+function closeLiferayPopUP()
+ {  
+      var data = ''; 
+	  Liferay.Util.getOpener().<portlet:namespace/>closeYourPopUp(data, '<portlet:namespace/>addNewWikiNodedialog');
+}
 </script>
+

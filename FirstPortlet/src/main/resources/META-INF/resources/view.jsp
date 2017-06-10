@@ -17,68 +17,6 @@
 <%@page import="com.liferay.portal.kernel.model.Role"%>
 <%@page import="java.util.List"%>
 <%@ include file="/init.jsp" %>
-<%--<%User me=user; %>
-<%
-System.out.println(me.getFullName());
-for(Role r:me.getRoles()){
-	System.out.println(r.getName());
-}
-%>
---%>
-<%--
-<%
-List<String> portletIdList = themeDisplay.getLayoutTypePortlet().getPortletIds();
-for(String s:portletIdList){
-	if(s.contains("com_liferay_wiki_web_portlet_WikiDisplayPortlet")){
-		%>
-		
-		<%
-		out.println(s);
-	}
-}
-
-/* LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) themeDisplay.getLayoutTypePortlet().getLayoutType();
-List<Portlet> portletList = layoutTypePortlet.getAllPortlets();
-out.println(portletList); */
-%>
- --%>
-<%--
-<%
-
-ThemeDisplay themeDisp = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-System.out.println("ID : " + themeDisp.getPortletDisplay().getId());
-
-System.out.println("InstanceID: " + themeDisp.getPortletDisplay().getInstanceId());
-System.out.println("Portlet Name: " + themeDisp.getPortletDisplay().getPortletName());
-    
-    %>
---%>
-<%--
-<aui:field-wrapper label="description">
-    <liferay-ui:input-editor name="descriptionEditor" toolbarSet="liferay-article" initMethod="initEditor" width="200" />
-    <script type="text/javascript">
-        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString("default content") %>"; }
-    </script>
-</aui:field-wrapper>
- --%>
- <%--
-<aui:form name="fm" cssClass="inline-3D">
-<liferay-ui:input-editor name="testEditor" height="100"/>
-<input name="<portlet:namespace />htmlCodeFromEditorPlacedHere" type="hidden" value="" />
-<input type="button" onclick="<portlet:namespace />extractCodeFromEditor()" value="Submit"/>
-</aui:form>
-<script type="text/javascript">
-            function <portlet:namespace />initEditor() {
-                        return '<font style="font-weight: bold">scott was here</font>';
-            }
-
-            function <portlet:namespace />extractCodeFromEditor() {
-                        var x = document.<portlet:namespace />fm.<portlet:namespace />htmlCodeFromEditorPlacedHere.value = window.<portlet:namespace />testEditor.getHTML();
- 
-                        alert(x);
-            }
-</script>
- --%>
 <%--<%=wiki_node_tableLocalServiceUtil.getwiki_node_table(1) %>
 <%=wiki_page_tableLocalServiceUtil.getwiki_page_table(1) %>
 <%=wiki_pagedata_tableLocalServiceUtil.getwiki_pagedata_table(1)%>
@@ -190,6 +128,7 @@ $("#table-newWikiNode").click(function(){
 		title: 'New Wiki Node' ,
 		uri:  portletURL.toString()
 		});
+
 });
 
 $("#table-newWikiPage").click(function(){
@@ -259,6 +198,7 @@ $("#table-wikiSubmit").click(function(){
    			 success: function() {
    				var data=this.get('responseData');
    				A.Array.each(data, function(obj, idx){
+   					$("#Pageversion").val(obj.version);
    					alert(obj.msg);
    				});
     		}
@@ -359,3 +299,61 @@ $("#table-wikiload").click(function(){
 
 </script>
 
+<%--
+Single function can close all type of popup window but I need different work on window close so
+for this purpose I will have to made two close method
+ --%>
+<aui:script> 
+Liferay.provide(window,'<portlet:namespace/>closeYourPopUp', function(data, dialogId) 
+		{ 
+	var A = AUI(); 
+	var dialog = Liferay.Util.Window.getById(dialogId); 
+	dialog.destroy();
+	location.reload();
+	}, 
+	['liferay-util-window'] 
+	); 
+</aui:script>
+
+<aui:script> 
+Liferay.provide(window,'<portlet:namespace/>closeYourPopUp_wikipage', function(data, dialogId) 
+		{ 
+	var A = AUI(); 
+	var dialog = Liferay.Util.Window.getById(dialogId); 
+	dialog.destroy();
+	//Start
+	$("#select-wikipage").empty();
+	window.<portlet:namespace />pageData.setHTML('');
+	var data=$(".select-wikinode").val();
+	if(data==null||data=='-Select-'){
+		alert("There is NO page please Add new page");
+		return;
+	}
+	
+	//Ajax
+	AUI().use('aui-base','aui-io-request', function(A){
+		//aui ajax call to get updated content
+		A.io.request('<%=select_wikipage%>',{
+  		dataType: 'json',
+  		method: 'GET',
+  		data: { '<portlet:namespace />data-value': data},
+  		on: {
+   			 success: function() {
+   				var data=this.get('responseData');
+   				A.Array.each(data, function(obj, idx){
+   					$("#select-wikipage").append(
+        $('<option>', {
+            value: obj.pageID,
+            text: obj.PageName
+        }, '</option>'));
+   				});
+    		}
+  		}
+		});
+		});
+	//Ajax End
+	//end
+	}, 
+	['liferay-util-window'] 
+	); 
+</aui:script>

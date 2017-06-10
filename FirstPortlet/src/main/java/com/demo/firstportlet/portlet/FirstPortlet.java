@@ -59,6 +59,7 @@ public class FirstPortlet extends MVCPortlet {
 		public void serveResource(ResourceRequest resourceRequest,
 				ResourceResponse resourceResponse)
 			throws  IOException, PortletException {
+			String remoteUserId = resourceRequest.getRemoteUser();
 			
 		switch (resourceRequest.getResourceID()) {
 		case "select_wikipage":
@@ -131,10 +132,8 @@ public class FirstPortlet extends MVCPortlet {
 		case "save_data":
 			//Start
 			try {
-				String remoteUserId = resourceRequest.getRemoteUser();
 				User user = UserServiceUtil.getUserById(Long.parseLong(remoteUserId));
 //				System.out.println(user.getFullName());
-				
 				long nodeID=new Long(ParamUtil.getString(resourceRequest, "node")).longValue();
 				long pageID=new Long(ParamUtil.getString(resourceRequest, "selectpage")).longValue();
 				String version=ParamUtil.getString(resourceRequest, "version");
@@ -149,6 +148,7 @@ public class FirstPortlet extends MVCPortlet {
 				wiki_pagedata_tableLocalServiceUtil.addwiki_pagedata_table(wpt);
 				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
 				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
+				pageJSON.put("version",version);
 				pageJSON.put("msg","SuccessFully Submited");
 				pageDataJson.put(pageJSON); 
 				resourceResponse.getWriter().print(pageDataJson.toString());
@@ -163,17 +163,55 @@ public class FirstPortlet extends MVCPortlet {
 			break;
 		case "newWikiNode":
 			//start
-			
 			try {
+				User user = UserServiceUtil.getUserById(Long.parseLong(remoteUserId));
 				System.out.println(ParamUtil.getString(resourceRequest, "NodeName"));
-				System.out.println(ParamUtil.getString(resourceRequest, "NodeDescription"));		
-				SessionMessages.add(resourceRequest, "success");
+				System.out.println(ParamUtil.getString(resourceRequest, "NodeDescription"));	
+				wiki_node_table wnt=wiki_node_tableLocalServiceUtil.createwiki_node_table(CounterLocalServiceUtil.increment());
+				wnt.setNodeName(ParamUtil.getString(resourceRequest, "NodeName"));
+				wnt.setNodeDescription(ParamUtil.getString(resourceRequest, "NodeDescription"));
+				wnt.setNodeCreator(user.getFullName());
+				Date d=new Date();
+				wnt.setNodeCreationDate(d.getMonth()+"/"+d.getDate()+"/"+d.getYear());
+				wiki_node_tableLocalServiceUtil.addwiki_node_table(wnt);
 				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
 				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
-				pageJSON.put("msg","SuccessFully Submited");
+				pageJSON.put("msg","SuccessFully Added new Node");
 				pageDataJson.put(pageJSON); 
 				resourceResponse.getWriter().print(pageDataJson.toString());
 			} catch (NumberFormatException  e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			//end
+			break;
+		case "newWikipage":
+			//start
+			try {
+				User user = UserServiceUtil.getUserById(Long.parseLong(remoteUserId));
+				System.out.println(ParamUtil.getString(resourceRequest, "NodeID"));
+				System.out.println(ParamUtil.getString(resourceRequest, "pageName"));
+				System.out.println(ParamUtil.getString(resourceRequest, "pageDescription"));
+				wiki_page_table wpt=wiki_page_tableLocalServiceUtil.createwiki_page_table(CounterLocalServiceUtil.increment());
+				wpt.setNodeID(new Long(ParamUtil.getString(resourceRequest, "NodeID")).longValue());
+				wpt.setPageName(ParamUtil.getString(resourceRequest, "pageName"));
+				wpt.setPageDescription(ParamUtil.getString(resourceRequest, "pageDescription"));
+				wpt.setPage_creator(user.getFullName());
+				Date d=new Date();
+				wpt.setPage_Creation_Date(d.getMonth()+"/"+d.getDate()+"/"+d.getYear());
+				wiki_page_tableLocalServiceUtil.addwiki_page_table(wpt);
+				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
+				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
+				pageJSON.put("msg","SuccessFully Added new Page");
+				pageDataJson.put(pageJSON); 
+				resourceResponse.getWriter().print(pageDataJson.toString());
+			} catch (NumberFormatException  e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PortalException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
@@ -185,13 +223,6 @@ public class FirstPortlet extends MVCPortlet {
 		}
 		}
 		
-		@ProcessAction(name="newWikiPage")
-		 public void newWikiPage(ActionRequest actionRequest, ActionResponse actionResponse)
-		   throws IOException, PortletException, PortalException {
-			System.out.println(ParamUtil.getString(actionRequest, "PageName"));
-			System.out.println(ParamUtil.getString(actionRequest, "PageDescription"));
-			System.out.println("Node ID"+ParamUtil.getString(actionRequest, "NodeID"));
-			SessionMessages.add(actionRequest, "success");
-		}
+		
 		
 }
