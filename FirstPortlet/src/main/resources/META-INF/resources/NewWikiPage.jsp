@@ -80,7 +80,6 @@ $("#btn-addpage").click(function(){
  					$("#txt-page").val('');
  					$("#txt-des").val('');
  					$("#txt-page-valid").hide();
- 					alert(obj.msg);
  					closeLiferayPopUP();
  				});
   		}
