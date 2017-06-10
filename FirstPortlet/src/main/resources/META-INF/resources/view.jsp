@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.daffo.wiki_node_tableservice.model.wiki_node_table"%>
 <%@page import="com.daffo.wiki_node_tableservice.service.wiki_comment_tableLocalServiceUtil"%>
 <%@page import="com.daffo.wiki_node_tableservice.service.wiki_pagedata_tableLocalServiceUtil"%>
@@ -101,6 +102,7 @@ for(wiki_node_table wn:wnt){
 	<option value="<%= wn.getNodeID()%>"><%= wn.getNodeName()%></option>
 	<%
 }
+
 %>
 </select>
 </div>
@@ -138,7 +140,7 @@ for(wiki_node_table wn:wnt){
 </tr>
 </tbody>
 </table>
-<input type="hidden" name="Pageversion" id="<portlet:namespace />Pageversion" value="">
+<input type="hidden" name="<portlet:namespace />Pageversion" id="Pageversion" value="0">
 <aui:field-wrapper label="Wiki Page Content">
 <liferay-ui:input-editor name="pageData" toolbarSet="liferay-article" initMethod="initEditor" width="100%" height="100%" />
     <script type="text/javascript">
@@ -163,30 +165,146 @@ for(wiki_node_table wn:wnt){
 <portlet:resourceURL var="load_data" id="load_data">
 </portlet:resourceURL>
 
+<portlet:resourceURL var="save_data" id="save_data">
+</portlet:resourceURL>
 <script>
 $("#table-newWikiNode").click(function(){
-	alert("Wiki Node");
+	/* alert("Wiki Node"); */
+	var portletURL = Liferay.PortletURL.createRenderURL();
+ 	portletURL.setWindowState('<%=LiferayWindowState.POP_UP.toString() %>');
+   // portletURL.setParameter('data', pagedata);    
+    portletURL.setPortletId("<%=themeDisplay.getPortletDisplay().getId() %>");
+    portletURL.setParameter('mvcPath', '/NewWikiNode.jsp');
+    // Now we can use the URL
+  // alert(portletURL.toString());
+   Liferay.Util.openWindow({
+		dialog: {
+		centered: true,
+		cssClass: 'my-liferay-popup',
+		constrain2view: true,
+		modal: true,
+		width: 500,
+		height:300
+		},
+		id: '<portlet:namespace/>addNewWikiNodedialog',
+		title: 'New Wiki Node' ,
+		uri:  portletURL.toString()
+		});
 });
 
 $("#table-newWikiPage").click(function(){
-	alert("Wiki Page");
+	//alert("Wiki Page");
+	var node=$("#select-wikinode").val();
+	if(node.length===0||node=='-Select-'){
+		alert("please Page or Add new NODE");
+		return;
+	}
+	var portletURL = Liferay.PortletURL.createRenderURL();
+ 	portletURL.setWindowState('<%=LiferayWindowState.POP_UP.toString() %>');
+    portletURL.setParameter('NodeId', node);    
+    portletURL.setPortletId("<%=themeDisplay.getPortletDisplay().getId() %>");
+    portletURL.setParameter('mvcPath', '/NewWikiPage.jsp');
+    // Now we can use the URL
+  // alert(portletURL.toString());
+   Liferay.Util.openWindow({
+		dialog: {
+		centered: true,
+		cssClass: 'my-liferay-popup',
+		constrain2view: true,
+		modal: true,
+		width: 500,
+		height:400
+		},
+		id: '<portlet:namespace/>addNewWikiPagedialog',
+		title: 'New Wiki Page' ,
+		uri:  portletURL.toString()
+		});
 });
 
 $("#table-wikiSubmit").click(function(){
-	var version=$("#Pageversion").val(); 
+	var version=$("#Pageversion").val();
+	if( version.length === 0 ) {
+       version="1";
+    }
+	else{
+		version=(parseInt(version)+1);
+	}
 	var node=$("#select-wikinode").val();
+	if(node.length===0||node=='-Select-'){
+		alert("please Page or Add new NODE");
+		return;
+	}
 	var selectpage=$("#select-wikipage").val();
+	if(selectpage==null||selectpage=='-Select-'){
+		alert("There is NO page please Add new page");
+		return;
+	}
 	var pagedata =window.<portlet:namespace />pageData.getHTML();
+	if(pagedata.length===0){
+		alert("please input data");
+		return;
+	}
+	//alert(version+"-"+node+"-"+selectpage+"-"+pagedata);
+	//Ajax
+	AUI().use('aui-base','aui-io-request', function(A){
+		//aui ajax call to get updated content
+		A.io.request('<%=save_data%>',{
+  		dataType: 'json',
+  		method: 'GET',
+  		data: { '<portlet:namespace />version': version,
+  			'<portlet:namespace />node': node,
+  			'<portlet:namespace />selectpage': selectpage,
+  			'<portlet:namespace />data-value':pagedata },
+  		on: {
+   			 success: function() {
+   				var data=this.get('responseData');
+   				A.Array.each(data, function(obj, idx){
+   					alert(obj.msg);
+   				});
+    		}
+  		}
+		});
+		});
+	//Ajax End
 	
 });
 
 $(".table-wikiPreview").click(function(){
-	alert("Wiki Preview");
+	var pagedata =window.<portlet:namespace />pageData.getHTML();
+	if(pagedata.length===0){
+		alert("please input data");
+		return;
+	}
+	var portletURL = Liferay.PortletURL.createRenderURL();
+ 	portletURL.setWindowState('<%=LiferayWindowState.POP_UP.toString() %>');
+    portletURL.setParameter('data', pagedata);    
+    portletURL.setPortletId("<%=themeDisplay.getPortletDisplay().getId() %>");
+    portletURL.setParameter('mvcPath', '/preview.jsp');
+    // Now we can use the URL
+  // alert(portletURL.toString());
+   Liferay.Util.openWindow({
+		dialog: {
+		centered: true,
+		cssClass: 'my-liferay-popup',
+		constrain2view: true,
+		modal: true,
+		width: 950
+		},
+		id: '<portlet:namespace/>editdialog',
+		title: 'Wiki Preview' ,
+		uri:  portletURL.toString()
+		});
 });
 
 $("#select-wikinode").change(function(){
+	$("#select-wikipage").empty();
+	window.<portlet:namespace />pageData.setHTML('');
 	var data=$(".select-wikinode").val();
-	$("#select-wikipage").empty(); 
+	if(data==null||data=='-Select-'){
+		alert("There is NO page please Add new page");
+		return;
+	}
+	
 	//Ajax
 	AUI().use('aui-base','aui-io-request', function(A){
 		//aui ajax call to get updated content
@@ -214,6 +332,10 @@ $("#select-wikinode").change(function(){
 $("#table-wikiload").click(function(){
 	var node=$("#select-wikinode").val();
 	var selectpage=$("#select-wikipage").val();
+	if(selectpage==null||selectpage=='-Select-'){
+		alert("There is NO page please Add new page");
+		return;
+	}
 	//Ajax
 	AUI().use('aui-base','aui-io-request', function(A){
 		//aui ajax call to get updated content

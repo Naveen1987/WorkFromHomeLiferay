@@ -1,7 +1,11 @@
 package com.demo.firstportlet.portlet;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.service.UserServiceUtil;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 
 import org.osgi.service.component.annotations.Component;
@@ -12,18 +16,22 @@ import com.daffo.wiki_node_tableservice.model.wiki_pagedata_table;
 import com.daffo.wiki_node_tableservice.service.wiki_node_tableLocalServiceUtil;
 import com.daffo.wiki_node_tableservice.service.wiki_page_tableLocalServiceUtil;
 import com.daffo.wiki_node_tableservice.service.wiki_pagedata_tableLocalServiceUtil;
+import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.ProcessAction;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
@@ -119,8 +127,71 @@ public class FirstPortlet extends MVCPortlet {
 			}
 			//End
 			break;
+			
+		case "save_data":
+			//Start
+			try {
+				String remoteUserId = resourceRequest.getRemoteUser();
+				User user = UserServiceUtil.getUserById(Long.parseLong(remoteUserId));
+//				System.out.println(user.getFullName());
+				
+				long nodeID=new Long(ParamUtil.getString(resourceRequest, "node")).longValue();
+				long pageID=new Long(ParamUtil.getString(resourceRequest, "selectpage")).longValue();
+				String version=ParamUtil.getString(resourceRequest, "version");
+				String data=ParamUtil.getString(resourceRequest, "data-value");
+				 wiki_pagedata_table wpt=wiki_pagedata_tableLocalServiceUtil.createwiki_pagedata_table(CounterLocalServiceUtil.increment());
+				wpt.setPage_Version(version);
+				wpt.setPageData(data);
+				Date d=new Date();
+				wpt.setPage_editDate(d.getMonth()+"/"+d.getDate()+"/"+d.getYear());
+				wpt.setPageID(pageID);
+				wpt.setPageEdit_User(user.getFullName());
+				wiki_pagedata_tableLocalServiceUtil.addwiki_pagedata_table(wpt);
+				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
+				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
+				pageJSON.put("msg","SuccessFully Submited");
+				pageDataJson.put(pageJSON); 
+				resourceResponse.getWriter().print(pageDataJson.toString());
+			} catch (NumberFormatException  e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+			//end
+			break;
+		case "newWikiNode":
+			//start
+			
+			try {
+				System.out.println(ParamUtil.getString(resourceRequest, "NodeName"));
+				System.out.println(ParamUtil.getString(resourceRequest, "NodeDescription"));		
+				SessionMessages.add(resourceRequest, "success");
+				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
+				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
+				pageJSON.put("msg","SuccessFully Submited");
+				pageDataJson.put(pageJSON); 
+				resourceResponse.getWriter().print(pageDataJson.toString());
+			} catch (NumberFormatException  e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			//end
+			break;
+			
 		default:
 			break;
 		}
 		}
+		
+		@ProcessAction(name="newWikiPage")
+		 public void newWikiPage(ActionRequest actionRequest, ActionResponse actionResponse)
+		   throws IOException, PortletException, PortalException {
+			System.out.println(ParamUtil.getString(actionRequest, "PageName"));
+			System.out.println(ParamUtil.getString(actionRequest, "PageDescription"));
+			System.out.println("Node ID"+ParamUtil.getString(actionRequest, "NodeID"));
+			SessionMessages.add(actionRequest, "success");
+		}
+		
 }
