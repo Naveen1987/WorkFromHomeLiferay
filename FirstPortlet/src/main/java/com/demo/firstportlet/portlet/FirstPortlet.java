@@ -26,7 +26,9 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.portlet.Portlet;
@@ -140,9 +142,14 @@ public class FirstPortlet extends MVCPortlet {
 				String data=ParamUtil.getString(resourceRequest, "data-value");
 				 wiki_pagedata_table wpt=wiki_pagedata_tableLocalServiceUtil.createwiki_pagedata_table(CounterLocalServiceUtil.increment());
 				wpt.setPage_Version(version);
-				wpt.setPageData(data);
-				Date d=new Date();
-				wpt.setPage_editDate(d.getMonth()+"/"+d.getDate()+"/"+d.getYear());
+				wpt.setPageData(data);			
+				Calendar calendar = new GregorianCalendar();
+				calendar.setTime(new Date());
+				int year = calendar.get(Calendar.YEAR);
+				//Add one to month {0 - 11}
+				int month = calendar.get(Calendar.MONTH)+1;
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+				wpt.setPage_editDate(month+"/"+day+"/"+year);
 				wpt.setPageID(pageID);
 				wpt.setPageEdit_User(user.getFullName());
 				wiki_pagedata_tableLocalServiceUtil.addwiki_pagedata_table(wpt);
@@ -171,8 +178,13 @@ public class FirstPortlet extends MVCPortlet {
 				wnt.setNodeName(ParamUtil.getString(resourceRequest, "NodeName"));
 				wnt.setNodeDescription(ParamUtil.getString(resourceRequest, "NodeDescription"));
 				wnt.setNodeCreator(user.getFullName());
-				Date d=new Date();
-				wnt.setNodeCreationDate(d.getMonth()+"/"+d.getDate()+"/"+d.getYear());
+				Calendar calendar = new GregorianCalendar();
+				calendar.setTime(new Date());
+				int year = calendar.get(Calendar.YEAR);
+				//Add one to month {0 - 11}
+				int month = calendar.get(Calendar.MONTH)+1;
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+				wnt.setNodeCreationDate(month+"/"+day+"/"+year);
 				wiki_node_tableLocalServiceUtil.addwiki_node_table(wnt);
 				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
 				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
@@ -200,8 +212,13 @@ public class FirstPortlet extends MVCPortlet {
 				wpt.setPageName(ParamUtil.getString(resourceRequest, "pageName"));
 				wpt.setPageDescription(ParamUtil.getString(resourceRequest, "pageDescription"));
 				wpt.setPage_creator(user.getFullName());
-				Date d=new Date();
-				wpt.setPage_Creation_Date(d.getMonth()+"/"+d.getDate()+"/"+d.getYear());
+				Calendar calendar = new GregorianCalendar();
+				calendar.setTime(new Date());
+				int year = calendar.get(Calendar.YEAR);
+				//Add one to month {0 - 11}
+				int month = calendar.get(Calendar.MONTH)+1;
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
+				wpt.setPage_Creation_Date(month+"/"+day+"/"+year);
 				wiki_page_tableLocalServiceUtil.addwiki_page_table(wpt);
 				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
 				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
