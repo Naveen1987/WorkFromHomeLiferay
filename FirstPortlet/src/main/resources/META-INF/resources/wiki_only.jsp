@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="java.util.List"%>
 <%@page import="com.daffo.wiki_node_tableservice.service.wiki_pagedata_tableLocalServiceUtil"%>
 <%@page import="com.daffo.wiki_node_tableservice.model.wiki_pagedata_table"%>
@@ -52,6 +53,7 @@ for(wiki_node_table wn:wnt){
 	%>
 	</ul>
 	<%
+	
 }
 %>
 </ul>
@@ -61,8 +63,36 @@ for(wiki_node_table wn:wnt){
 </table>
 </div>
 <div class="col-md-9">
-<div style="background-color:#8EB7FD; height:38px;"><h1 style="margin-left:5px">Wiki Page - <span  id="wiki-id"></span></h1></div>
-<div style="margin-left:3px;border:1px solid black;"><div id="data-show"></div></div>
+<div class="row">
+<div class="col-md-12">
+<div style="text-align:right">
+<span class="btn btn-warning" id="edit_page">Edit Page</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-warning">Edit Wiki Page</span>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<input type="hidden" id="nodeID"/>
+<input type="hidden" id="pageID"/>
+<div style="background-color:#8EB7FD; height:35px;
+    box-shadow: 10px 10px 5px #888888;"><h1 style="margin-left:5px">Wiki Page - <span style="font-size:20px;"  id="wiki-id"></span></h1></div>
+</div>
+</div>
+<div class="row">
+<br/>
+<div class="col-md-12">
+<div id="data-show"></div>
+<div id="edit-data" style="display:none">
+<aui:field-wrapper label="Wiki Page Content">
+<liferay-ui:input-editor name="edit_page_Data" toolbarSet="liferay-article" initMethod="initEditor" width="100%" height="100%" />
+    <script type="text/javascript">
+        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString("") %>"; }
+    </script>
+</aui:field-wrapper>
+</div>
+</div>
+</div>
+
 </div>
 </div>
 </div>
@@ -89,12 +119,20 @@ $('.inner-page').click(function(){
 	   				A.Array.each(data, function(obj, idx){
 	   				$("#wiki-id")[0].innerHTML=obj.pagename;
 	   				$("#data-show")[0].innerHTML=obj.Pagedata;
-	   				//alert(obj.version+" "+obj.Pagedata);
+	   				$("#nodeID").val(data_node_pageid);
+	   				$("#pageID").val(data_pageid);
 	   				});
 	    		}
 	  		}
 			});
 			});
 		//Ajax End
+	});
+	
+	$("#edit_page").click(function(){
+		$("#edit-data").show();
+		$("#data-show").hide();
+		window.<portlet:namespace />pageData.setHTML($("#edit_page_Data")[0].innerHTML);
+		alert($("#nodeID").val()+" "+$("#pageID").val()+" "+$("#data-show")[0].innerHTML);
 	});
 </script>
