@@ -250,6 +250,45 @@ public class FirstPortlet extends MVCPortlet {
 			}		
 			//end
 			break;
+		case "select_wikiPageData":
+			//Start
+			try {
+				long nodeID=new Long(ParamUtil.getString(resourceRequest, "data-node_page_id")).longValue();
+				long pageID=new Long(ParamUtil.getString(resourceRequest, "data-pageid")).longValue();
+				
+				String data="";
+				String version="";
+				String page_name="";
+				List<wiki_pagedata_table> wpt=wiki_pagedata_tableLocalServiceUtil.getwiki_pagedata_tables(0, wiki_pagedata_tableLocalServiceUtil.getwiki_pagedata_tablesCount());
+				long id=0;
+				for(wiki_pagedata_table wp:wpt){
+					if(wp.getPageID()==pageID){
+						if(id<wp.getPage_ModID()){
+							page_name=wiki_page_tableLocalServiceUtil.getwiki_page_table(pageID).getPageName();
+							data=wp.getPageData();
+							version=wp.getPage_Version();
+							id=wp.getPage_ModID();
+							//System.out.println(data+" "+version);	
+						}
+				}
+				}
+				JSONArray pageDataJson = JSONFactoryUtil.createJSONArray();
+				JSONObject pageJSON = JSONFactoryUtil.createJSONObject();
+				pageJSON.put("pagename",page_name);
+				pageJSON.put("version",version);
+				pageJSON.put("Pagedata",data);
+				pageDataJson.put(pageJSON); 
+				System.out.println("Hello-"+data+" "+version);
+				resourceResponse.getWriter().print(pageDataJson.toString());
+			} catch (NumberFormatException  e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//End
+			break;
 			
 		default:
 			break;
