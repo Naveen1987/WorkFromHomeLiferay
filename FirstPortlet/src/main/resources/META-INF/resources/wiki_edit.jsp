@@ -23,7 +23,7 @@
 <%=wiki_comment_tableLocalServiceUtil.getwiki_comment_table(1) %>
 --%>
 
-<div class="container">
+<div class="container-fluid-1280">
 <%--First Row --%>
 <div class="row">
 <br/>
@@ -121,7 +121,7 @@ $("#table-newWikiNode").click(function(){
 		cssClass: 'my-liferay-popup',
 		constrain2view: true,
 		modal: true,
-		width: 500,
+		width: 700,
 		height:300
 		},
 		id: '<portlet:namespace/>addNewWikiNodedialog',
@@ -151,7 +151,7 @@ $("#table-newWikiPage").click(function(){
 		cssClass: 'my-liferay-popup',
 		constrain2view: true,
 		modal: true,
-		width: 500,
+		width:700,
 		height:400
 		},
 		id: '<portlet:namespace/>addNewWikiPagedialog',

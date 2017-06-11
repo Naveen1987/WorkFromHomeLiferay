@@ -1,7 +1,7 @@
 <%@ include file="/init.jsp" %>
 <%--<%=request.getParameter("NodeId")%> --%>
 
-<div class="container" style="margin-left:20px;margin-right:20px;">
+<div class="container-fluid-1280" style="margin-left:20px;margin-right:20px;">
 <div class="row">
 <br/>
 
